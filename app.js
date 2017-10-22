@@ -1,3 +1,10 @@
+/*
+3 controladores compoem o projeto
+Budget Controller: Vai cuidar das chamadas backend, executar calculos e retornar valores, bem como cuidar de armazenamento
+UI Controller: Vai cuidar dos itens de interface do usuario, adicionar/remover itens da ui e atualizar os valores
+APP Controller: Interface entre Budget e UI controllers. Ele que vai realizar todo o processo de chamada e execucao de metodos.
+*/
+
 // BUDGET CONTROLLER
 var budgetController = (function() {
     
@@ -8,8 +15,11 @@ var budgetController = (function() {
         this.percentage = -1;
     };
     
-    
-    Expense.prototype.calcPercentage = function(totalIncome) {
+    /*
+	prototype: permite heranca. Todos os objetos herdam suas propriedades e metodos de seu prototype. 
+
+    */
+    Expense.prototype.calcPercentage = function(totalIncome) { 
         if (totalIncome > 0) {
             this.percentage = Math.round((this.value / totalIncome) * 100);
         } else {
@@ -218,7 +228,12 @@ var UIController = (function() {
     
     var nodeListForEach = function(list, callback) {
         for (var i = 0; i < list.length; i++) {
-            callback(list[i], i);
+        	/**
+			CallBack (ou chamada de retorno, em português) é um mecanismo de controle de fluxo que visa beneficiar processos assíncronos
+			Ela é tipicamente passada como argumento de outra função e/ou chamada quando um evento for acontecido, 
+			ou quando uma parte de código receber uma resposta de que estava à espera	
+        	*/
+            callback(list[i], i); 
         }
     };
     
@@ -260,7 +275,11 @@ var UIController = (function() {
         deleteListItem: function(selectorID) {
             
             var el = document.getElementById(selectorID);
-            el.parentNode.removeChild(el);
+            /*
+			parentNode: Eh uma propriedade DOM somente leitura que retorna o no (node) parente de um Node referenciado na arvore DOM.
+			Eh o node parente do node referenciado. O parente de um elemento é um Element node, um Document node, ou um DocumentFragment node.
+            */
+            el.parentNode.removeChild(el);  
             
         },
         
@@ -284,7 +303,7 @@ var UIController = (function() {
             var type;
             obj.budget > 0 ? type = 'inc' : type = 'exp';
             
-            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type); //DOMstrings retorna uma string do documento como String
             document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
             document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
             
@@ -301,7 +320,7 @@ var UIController = (function() {
             
             var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
             
-            nodeListForEach(fields, function(current, index) {
+            nodeListForEach(fields, function(current, index) { //funcao forEach feita propria para node
                 
                 if (percentages[index] > 0) {
                     current.textContent = percentages[index] + '%';
@@ -468,4 +487,4 @@ var controller = (function(budgetCtrl, UICtrl) {
 })(budgetController, UIController);
 
 
-controller.init();
+controller.init(); //init() inicializa o objeto em questao. Lembrar que em js funcao eh objeto tambem
